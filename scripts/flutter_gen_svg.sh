@@ -1,0 +1,1 @@
+fluttergen -c /Users/elif/development/arpclean/pubspec.yaml
