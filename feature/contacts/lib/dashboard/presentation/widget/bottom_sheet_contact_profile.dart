@@ -1,14 +1,16 @@
 import 'package:contacts/dashboard/application/dashboard_cubit.dart';
 import 'package:contacts/dashboard/application/dashboard_state.dart';
-import 'package:contacts/dashboard/application/dashboard_status.dart';
 import 'package:contacts/dashboard/domain/entity/user_dto_entity.dart';
 import 'package:contacts/dashboard/presentation/widget/bottom_sheet_delete_account.dart';
+import 'package:contacts/dashboard/presentation/widget/bottom_sheet_edit_contact.dart';
 import 'package:contacts/dashboard/presentation/widget/bottom_sheet_header_widget.dart';
 import 'package:contacts/utils/injection_contatiner.dart';
 import 'package:core/extensions/context_extensions.dart';
 import 'package:core/navigation/go_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uikit/bottomSheets/base_bottom_sheet.dart';
+import 'package:uikit/container/base_bottom_sheet_container.dart';
 
 class BottomSheetContactProfile extends StatelessWidget {
   const BottomSheetContactProfile({super.key, required this.user});
@@ -21,7 +23,7 @@ class BottomSheetContactProfile extends StatelessWidget {
       create: (context) => sl<DashboardCubit>(),
       child: FractionallySizedBox(
         heightFactor: 0.9,
-        child: _BottomSheetContent(user: user),
+        child: _BottomSheetContent(selectedUser: user),
       ),
     );
   }
@@ -30,60 +32,53 @@ class BottomSheetContactProfile extends StatelessWidget {
 class _BottomSheetContent extends StatelessWidget {
   const _BottomSheetContent({
     super.key,
-    required this.user,
+    required this.selectedUser,
   });
 
-  final UserDtoEntity user;
+  final UserDtoEntity selectedUser;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardCubit, DashboardState>(
       builder: (context, state) {
-        if (state.status == DashboardStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return Container(
-          decoration: BoxDecoration(
-            color: context.theme.scaffoldBackgroundColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 10,
-                offset: const Offset(0, -2),
-              ),
+        return BaseBottomSheetContainer(
+          theme: context.theme,
+          padding: context.paddingPage,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 40),
+              _buildProfileImage(context),
+              _buildInfoSection(context),
+              _buildDeleteButton(context),
             ],
-          ),
-          child: Padding(
-            padding: context.paddingPage,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                BottomSheetHeaderWidget(
-                  isDoneEnabled: true,
-                  onCancel: GoManager.instance.pop,
-                  onDone: GoManager.instance.pop,
-                  title: "Contact Profile",
-                ),
-                const SizedBox(height: 40),
-                _buildProfileImage(context),
-                _buildInfoSection(context),
-                _buildDeleteButton(context),
-              ],
-            ),
           ),
         );
       },
     );
   }
 
+  Widget _buildHeader(BuildContext context) => BottomSheetHeaderWidget(
+        isDoneEnabled: true,
+        onCancel: GoManager.instance.pop,
+        onDone: () {
+          BaseBottomSheet.show(
+            context: context,
+            child: BottomSheetEditContact(selectedUser: selectedUser),
+          );
+        },
+        title: "Contact Profile",
+        actionText: "Edit",
+      );
+
   Widget _buildProfileImage(BuildContext context) => Column(
         children: [
           Center(
             child: CircleAvatar(
               radius: 98,
-              backgroundImage: NetworkImage(user.profileImageUrl ?? ''),
+              backgroundImage: NetworkImage(selectedUser.profileImageUrl ?? ''),
             ),
           ),
           TextButton(
@@ -99,7 +94,11 @@ class _BottomSheetContent extends StatelessWidget {
   Widget _buildInfoSection(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final info in [user.firstName, user.lastName, user.phoneNumber])
+          for (final info in [
+            selectedUser.firstName,
+            selectedUser.lastName,
+            selectedUser.phoneNumber
+          ])
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -121,10 +120,10 @@ class _BottomSheetContent extends StatelessWidget {
       );
 
   void _showDeleteConfirmation(BuildContext context) {
-    showModalBottomSheet(
+    BaseBottomSheet.show(
       context: context,
-      builder: (_) => BottomSheetDeleteAccount(
-        onYes: () => context.read<DashboardCubit>().deleteSingleUser(userId: user.id!),
+      child: BottomSheetDeleteAccount(
+        onYes: () => context.read<DashboardCubit>().deleteSingleUser(userId: selectedUser.id!),
         onNo: GoManager.instance.pop,
       ),
     );

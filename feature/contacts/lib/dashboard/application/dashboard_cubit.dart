@@ -2,6 +2,7 @@ import 'package:contacts/dashboard/application/dashboard_state.dart';
 import 'package:contacts/dashboard/application/dashboard_status.dart';
 import 'package:contacts/dashboard/data/model/user_model.dart';
 import 'package:contacts/dashboard/domain/entity/user_dto_entity.dart';
+import 'package:contacts/dashboard/domain/entity/user_entity.dart';
 import 'package:contacts/dashboard/domain/usecase/create_user_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/delete_single_user_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/fetch_single_user_usecase.dart';
@@ -43,6 +44,10 @@ class DashboardCubit extends Cubit<DashboardState> {
   Future<void> init() async {
     await fetchUsers(pageKey: 0);
     pagingController.addPageRequestListener((pageKey) {});
+  }
+
+  void initEditUser({required UserDtoEntity selectedUser}) {
+    emit(state.copyWith(selectedUser: selectedUser));
   }
 
   Future<void> fetchUsers({required int pageKey}) async {
@@ -102,7 +107,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     }, (user) {});
   }
 
-  Future<void> updateSingleUser({required UserModel user, required String userId}) async {
+  Future<void> updateSingleUser({required UserEntity user, required String userId}) async {
     emit(state.copyWith(status: DashboardStatus.loading));
     final result =
         await _updateSingleUserUsecase(UpdateSingleUserUsecaseParams(user: user, userId: userId));
@@ -137,24 +142,43 @@ class DashboardCubit extends Cubit<DashboardState> {
     GoManager.instance.pop();
   }
 
+  Future<void> handleUpdateUser() async {
+    UserDtoEntity? selectedUser = state.selectedUser;
+    print("selectedUser: ${selectedUser?.firstName}");
+    print("selectedUser: ${selectedUser?.lastName}");
+    print("selectedUser: ${selectedUser?.phoneNumber}");
+  }
+
   void setFirstName({required String firstName}) {
-    emit(state.copyWith(newUser: state.newUser?.copyWith(firstName: firstName)));
+    emit(state.copyWith(user: state.user?.copyWith(firstName: firstName)));
   }
 
   void setLastName({required String lastName}) {
-    emit(state.copyWith(newUser: state.newUser?.copyWith(lastName: lastName)));
+    emit(state.copyWith(user: state.user?.copyWith(lastName: lastName)));
   }
 
   void setPhoneNumber({required String phoneNumber}) {
-    emit(state.copyWith(newUser: state.newUser?.copyWith(phoneNumber: phoneNumber)));
+    emit(state.copyWith(user: state.user?.copyWith(phoneNumber: phoneNumber)));
+  }
+
+  void editFirstName({required String firstName}) {
+    emit(state.copyWith(selectedUser: state.selectedUser?.copyWith(firstName: firstName)));
+  }
+
+  void editLastName({required String lastName}) {
+    emit(state.copyWith(selectedUser: state.selectedUser?.copyWith(lastName: lastName)));
+  }
+
+  void editPhoneNumber({required String phoneNumber}) {
+    emit(state.copyWith(selectedUser: state.selectedUser?.copyWith(phoneNumber: phoneNumber)));
   }
 
   bool isAllFieldsFilled() {
-    return state.newUser?.firstName != null &&
-        state.newUser!.firstName!.trim().isNotEmpty &&
-        state.newUser?.lastName != null &&
-        state.newUser!.lastName!.trim().isNotEmpty &&
-        state.newUser?.phoneNumber != null &&
-        state.newUser!.phoneNumber!.trim().isNotEmpty;
+    return state.user?.firstName != null &&
+        state.user!.firstName!.trim().isNotEmpty &&
+        state.user?.lastName != null &&
+        state.user!.lastName!.trim().isNotEmpty &&
+        state.user?.phoneNumber != null &&
+        state.user!.phoneNumber!.trim().isNotEmpty;
   }
 }

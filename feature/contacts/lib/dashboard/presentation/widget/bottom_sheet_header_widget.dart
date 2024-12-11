@@ -7,12 +7,14 @@ class BottomSheetHeaderWidget extends StatelessWidget {
       required this.onCancel,
       required this.onDone,
       required this.title,
-      required this.isDoneEnabled});
+      required this.isDoneEnabled,
+      this.actionText});
 
   final VoidCallback onCancel;
   final VoidCallback onDone;
   final bool isDoneEnabled;
   final String title;
+  final String? actionText;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class BottomSheetHeaderWidget extends StatelessWidget {
         TextButton(
           onPressed: isDoneEnabled ? onDone : null,
           child: Text(
-            "Done",
+            actionText ?? "Done",
             style: context.textTheme.titleSmall!.copyWith(color: context.colors.onPrimary),
           ),
         ),

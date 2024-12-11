@@ -2,6 +2,7 @@ import 'package:contacts/dashboard/data/datasource/dashboard_remote_datasource.d
 import 'package:contacts/dashboard/data/model/user_dto_model.dart';
 import 'package:contacts/dashboard/data/model/user_list_response_success_dto.dart';
 import 'package:contacts/dashboard/data/model/user_model.dart';
+import 'package:contacts/dashboard/domain/entity/user_entity.dart';
 import 'package:contacts/dashboard/domain/usecase/delete_single_user_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/fetch_users_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/search_users_usecase.dart';
@@ -65,7 +66,7 @@ class DashboardRemoteDatasourceImplementation extends DashboardRemoteDatasource 
 
   @override
   Future<UserDtoModel> updateSingleUser({
-    required UserModel user,
+    required UserEntity user,
     required String userId,
   }) async {
     final response = await _manager.dioPut(

@@ -9,6 +9,8 @@ import 'package:core/extensions/context_extensions.dart';
 import 'package:core/navigation/go_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uikit/bottomSheets/base_bottom_sheet.dart';
+import 'package:uikit/container/base_bottom_sheet_container.dart';
 
 class BottomSheetNewContact extends StatelessWidget {
   const BottomSheetNewContact({super.key});
@@ -34,59 +36,22 @@ class _BottomSheetContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardCubit, DashboardState>(
       builder: (context, state) {
-        return Container(
-          decoration: BoxDecoration(
-            color: context.theme.colorScheme.onSurface,
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 10,
-                offset: Offset(0, -2),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: context.paddingPage,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                BottomSheetHeaderWidget(
-                    onCancel: () {
-                      GoManager.instance.pop();
-                    },
-                    isDoneEnabled: context.read<DashboardCubit>().isAllFieldsFilled(),
-                    onDone: () {},
-                    title: "New Contact"),
-                SizedBox(height: 40),
-                Center(
-                  child: InkWell(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                          ),
-                        ),
-                        builder: (context) {
-                          return BottomSheetImageSelect(
-                            onImageSelect: (imageSource) {
-                              if (imageSource != null) {
-                                context
-                                    .read<DashboardCubit>()
-                                    .handleImageSelect(imageSource: imageSource);
-                              }
-                            },
-                          );
-                        },
-                      );
-                    },
+        return BaseBottomSheetContainer(
+            child: Padding(
+              padding: context.paddingPage,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BottomSheetHeaderWidget(
+                      onCancel: () {
+                        GoManager.instance.pop();
+                      },
+                      isDoneEnabled: context.read<DashboardCubit>().isAllFieldsFilled(),
+                      onDone: () {},
+                      title: "New Contact"),
+                  SizedBox(height: 40),
+                  Center(
                     child: CircleAvatar(
                       backgroundColor: context.theme.dividerColor,
                       backgroundImage: state.image != null ? FileImage(File(state.image!)) : null,
@@ -98,43 +63,58 @@ class _BottomSheetContent extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    "Add Photo",
-                    style: context.textTheme.titleSmall,
-                    textAlign: TextAlign.center,
+                  SizedBox(height: 20),
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        BaseBottomSheet.show(
+                          context: context,
+                          child: BottomSheetImageSelect(
+                            onImageSelect: (imageSource) {
+                              if (imageSource != null) {
+                                context
+                                    .read<DashboardCubit>()
+                                    .handleImageSelect(imageSource: imageSource);
+                              }
+                            },
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Add Photo",
+                        style: context.textTheme.titleSmall,
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                TextField(
-                  onChanged: (value) =>
-                      context.read<DashboardCubit>().setFirstName(firstName: value),
-                  decoration: InputDecoration(
-                    labelText: state.newUser?.firstName,
-                    hintText: "First Name",
+                  SizedBox(height: 20),
+                  TextField(
+                    onChanged: (value) =>
+                        context.read<DashboardCubit>().setFirstName(firstName: value),
+                    decoration: InputDecoration(
+                      labelText: state.user?.firstName,
+                      hintText: "First Name",
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                TextField(
-                  onChanged: (value) => context.read<DashboardCubit>().setLastName(lastName: value),
-                  decoration: InputDecoration(
-                    hintText: "Last Name",
+                  SizedBox(height: 20),
+                  TextField(
+                    onChanged: (value) =>
+                        context.read<DashboardCubit>().setLastName(lastName: value),
+                    decoration: InputDecoration(
+                      hintText: "Last Name",
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                TextField(
-                  onChanged: (value) =>
-                      context.read<DashboardCubit>().setPhoneNumber(phoneNumber: value),
-                  decoration: InputDecoration(
-                    hintText: "Phone Number",
+                  SizedBox(height: 20),
+                  TextField(
+                    onChanged: (value) =>
+                        context.read<DashboardCubit>().setPhoneNumber(phoneNumber: value),
+                    decoration: InputDecoration(
+                      hintText: "Phone Number",
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
+            theme: context.theme);
       },
     );
   }

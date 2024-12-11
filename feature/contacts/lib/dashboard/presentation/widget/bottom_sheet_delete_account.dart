@@ -1,5 +1,6 @@
 import 'package:core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:uikit/container/base_bottom_sheet_container.dart';
 
 class BottomSheetDeleteAccount extends StatelessWidget {
   const BottomSheetDeleteAccount({super.key, required this.onYes, required this.onNo});
@@ -21,21 +22,8 @@ class BottomSheetContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: context.theme.colorScheme.onSurface,
-        borderRadius:
-            const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Padding(
+    return BaseBottomSheetContainer(
+        theme: context.theme,
         padding: context.paddingPage,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,8 +48,6 @@ class BottomSheetContent extends StatelessWidget {
             ),
             const SizedBox(height: 30),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }

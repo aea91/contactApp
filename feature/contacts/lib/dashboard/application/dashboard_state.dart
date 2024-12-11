@@ -10,7 +10,8 @@ class DashboardState extends Equatable {
     required this.exception,
     required this.userList,
     required this.image,
-    required this.newUser,
+    required this.user,
+    required this.selectedUser,
     required this.keyword,
   });
 
@@ -18,7 +19,8 @@ class DashboardState extends Equatable {
   final AppException? exception;
   final List<UserDtoEntity>? userList;
   final String? image;
-  final UserEntity? newUser;
+  final UserEntity? user;
+  final UserDtoEntity? selectedUser;
   final String? keyword;
 
   factory DashboardState.initial() => const DashboardState(
@@ -26,19 +28,21 @@ class DashboardState extends Equatable {
         exception: null,
         userList: null,
         image: null,
-        newUser: null,
+        user: null,
+        selectedUser: null,
         keyword: null,
       );
 
   @override
-  List<Object?> get props => [status, exception, userList, image, newUser, keyword];
+  List<Object?> get props => [status, exception, userList, image, user, selectedUser, keyword];
 
   DashboardState copyWith({
     DashboardStatus? status,
     AppException? exception,
     List<UserDtoEntity>? userList,
     String? image,
-    UserEntity? newUser,
+    UserEntity? user,
+    UserDtoEntity? selectedUser,
     String? keyword,
   }) {
     return DashboardState(
@@ -46,7 +50,8 @@ class DashboardState extends Equatable {
       exception: exception ?? this.exception,
       userList: userList ?? this.userList,
       image: image ?? this.image,
-      newUser: newUser ?? this.newUser,
+      user: user ?? this.user,
+      selectedUser: selectedUser ?? this.selectedUser,
       keyword: keyword ?? this.keyword,
     );
   }

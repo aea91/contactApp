@@ -2,6 +2,7 @@ import 'package:contacts/dashboard/data/datasource/dashboard_remote_datasource.d
 import 'package:contacts/dashboard/data/model/user_dto_model.dart';
 import 'package:contacts/dashboard/data/model/user_list_response_success_dto.dart';
 import 'package:contacts/dashboard/data/model/user_model.dart';
+import 'package:contacts/dashboard/domain/entity/user_entity.dart';
 import 'package:contacts/dashboard/domain/repository/dashboard_repository.dart';
 import 'package:core/base/model/network_error.dart';
 import 'package:core/typedef/network_typedef.dart';
@@ -45,7 +46,7 @@ class DashboardRepositoryImplementation implements DashboardRepository {
 
   @override
   ResultFuture<UserDtoModel> updateSingleUser({
-    required UserModel user,
+    required UserEntity user,
     required String userId,
   }) async {
     try {
