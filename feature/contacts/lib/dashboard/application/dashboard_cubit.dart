@@ -50,7 +50,9 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   Future<void> init() async {
     await fetchUsers(pageKey: 0);
-    pagingController.addPageRequestListener((pageKey) {});
+    pagingController.addPageRequestListener((pageKey) {
+      fetchUsers(pageKey: pageKey);
+    });
   }
 
   void initEditUser({required UserDtoEntity selectedUser}) {
@@ -79,6 +81,10 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   Future<void> searchUsers({required String search, required int pageKey}) async {
     bool? isLastPage;
+
+    if (pageKey == 0) {
+      pagingController.itemList = [];
+    }
     emit(state.copyWith(status: DashboardStatus.loading));
     final result = await _searchUsersUsecase(
         SearchUsersUsecaseParams(search: search, skip: pageKey, take: _pageSize));

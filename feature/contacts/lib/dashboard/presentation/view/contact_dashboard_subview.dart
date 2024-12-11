@@ -40,7 +40,6 @@ class _SearchBar extends StatelessWidget {
       hintText: "Search by name",
       theme: context.theme,
       onChanged: (value) {
-        context.read<DashboardCubit>().pagingController.refresh();
         context.read<DashboardCubit>().searchUsers(search: value, pageKey: 0);
       },
     );
