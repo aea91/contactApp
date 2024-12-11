@@ -13,6 +13,7 @@ class UserDtoEntity extends UserEntity {
   final String? id;
   final String? createdAt;
 
+  @override
   UserDtoEntity copyWith({
     String? id,
     String? createdAt,

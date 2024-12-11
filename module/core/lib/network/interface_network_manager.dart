@@ -51,7 +51,6 @@ abstract class InterfaceNetworkManager {
     required String path,
     required FormData formData,
     required String token,
-    required int deviceId,
     required Function(Map<String, dynamic> json)? fromJson,
   });
 }

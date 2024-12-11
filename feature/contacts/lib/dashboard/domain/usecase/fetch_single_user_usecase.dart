@@ -1,4 +1,5 @@
 import 'package:contacts/dashboard/data/model/user_dto_model.dart';
+import 'package:contacts/dashboard/domain/entity/user_dto_entity.dart';
 import 'package:contacts/dashboard/domain/repository/dashboard_repository.dart';
 import 'package:core/typedef/network_typedef.dart';
 import 'package:core/usecase/usecase.dart';
@@ -6,7 +7,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'fetch_single_user_usecase.g.dart';
 
-class FetchSingleUserUsecase extends UseCaseWithParams<UserDtoModel, FetchSingleUserUsecaseParams> {
+class FetchSingleUserUsecase
+    extends UseCaseWithParams<UserDtoEntity, FetchSingleUserUsecaseParams> {
   FetchSingleUserUsecase(this._repository);
 
   final DashboardRepository _repository;

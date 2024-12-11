@@ -4,14 +4,16 @@ class BaseContactCard extends StatelessWidget {
   const BaseContactCard({
     super.key,
     required this.theme,
-    required this.name,
+    required this.firstName,
+    required this.lastName,
     required this.phone,
     required this.imageUrl,
     required this.onTap,
   });
 
   final ThemeData theme;
-  final String name;
+  final String firstName;
+  final String lastName;
   final String phone;
   final String imageUrl;
   final VoidCallback onTap;
@@ -27,10 +29,12 @@ class BaseContactCard extends StatelessWidget {
         onTap: onTap,
         visualDensity: VisualDensity.compact,
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(imageUrl),
+          backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
         ),
-        title:
-            Text(name, style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold)),
+        title: Text(
+          "$firstName $lastName",
+          style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+        ),
         subtitle: Text(phone, style: theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
       ),
     );

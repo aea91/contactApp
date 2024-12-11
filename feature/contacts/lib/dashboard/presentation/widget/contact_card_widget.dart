@@ -19,7 +19,8 @@ class ContactCardWidget extends StatelessWidget {
           child: BottomSheetContactProfile(user: user),
         );
       },
-      name: user.firstName ?? "",
+      firstName: user.firstName ?? "",
+      lastName: user.lastName ?? "",
       phone: user.phoneNumber ?? "",
       imageUrl: user.profileImageUrl ?? "",
       theme: context.theme,

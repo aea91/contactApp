@@ -39,24 +39,20 @@ class _BottomSheetContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DashboardCubit, DashboardState>(
-      builder: (context, state) {
-        return BaseBottomSheetContainer(
-          theme: context.theme,
-          padding: context.paddingPage,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildHeader(context),
-              const SizedBox(height: 40),
-              _buildProfileImage(context),
-              _buildInfoSection(context),
-              _buildDeleteButton(context),
-            ],
-          ),
-        );
-      },
+    return BaseBottomSheetContainer(
+      theme: context.theme,
+      padding: context.paddingPage,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildHeader(context),
+          const SizedBox(height: 40),
+          _buildProfileImage(context),
+          _buildInfoSection(context),
+          _buildDeleteButton(context),
+        ],
+      ),
     );
   }
 
@@ -64,10 +60,7 @@ class _BottomSheetContent extends StatelessWidget {
         isDoneEnabled: true,
         onCancel: GoManager.instance.pop,
         onDone: () {
-          BaseBottomSheet.show(
-            context: context,
-            child: BottomSheetEditContact(selectedUser: selectedUser),
-          );
+          context.read<DashboardCubit>().handleCreateUser();
         },
         title: "Contact Profile",
         actionText: "Edit",

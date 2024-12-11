@@ -16,7 +16,7 @@ abstract class IGoService {
     Object? data,
   });
   bool canPop();
-  pop();
+  pop<T extends Object?>([T? result]);
   dispose();
   BuildContext? get getContext;
 }

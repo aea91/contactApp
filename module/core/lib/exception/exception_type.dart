@@ -1,4 +1,4 @@
 enum ExceptionType {
   info,
-  warning,
+  error,
 }

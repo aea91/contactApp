@@ -63,11 +63,15 @@ class _HeaderPage extends StatelessWidget {
       ),
       trailing: BaseActionButton(
         icon: Icons.add,
-        onTap: () {
-          BaseBottomSheet.show(
+        onTap: () async {
+          final result = await BaseBottomSheet.show(
             context: context,
             child: const BottomSheetNewContact(),
           );
+          if (result == true && context.mounted) {
+            context.read<DashboardCubit>().pagingController.refresh();
+            context.read<DashboardCubit>().init();
+          }
         },
         theme: context.theme,
       ),

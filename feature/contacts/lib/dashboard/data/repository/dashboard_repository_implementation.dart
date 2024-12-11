@@ -1,8 +1,7 @@
 import 'package:contacts/dashboard/data/datasource/dashboard_remote_datasource.dart';
+import 'package:contacts/dashboard/data/model/upload_image_model.dart';
 import 'package:contacts/dashboard/data/model/user_dto_model.dart';
 import 'package:contacts/dashboard/data/model/user_list_response_success_dto.dart';
-import 'package:contacts/dashboard/data/model/user_model.dart';
-import 'package:contacts/dashboard/domain/entity/user_entity.dart';
 import 'package:contacts/dashboard/domain/repository/dashboard_repository.dart';
 import 'package:core/base/model/network_error.dart';
 import 'package:core/typedef/network_typedef.dart';
@@ -25,9 +24,18 @@ class DashboardRepositoryImplementation implements DashboardRepository {
   }
 
   @override
-  ResultFuture<UserDtoModel> createUser({required UserModel user}) async {
+  ResultFuture<UserDtoModel> createUser({
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String? profileImageUrl,
+  }) async {
     try {
-      final response = await _datasource.createUser(user: user);
+      final response = await _datasource.createUser(
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+          profileImageUrl: profileImageUrl);
       return Right(response);
     } on NetworkException catch (e) {
       return Left(NetworkException.fromException(e));
@@ -46,11 +54,19 @@ class DashboardRepositoryImplementation implements DashboardRepository {
 
   @override
   ResultFuture<UserDtoModel> updateSingleUser({
-    required UserEntity user,
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String profileImageUrl,
     required String userId,
   }) async {
     try {
-      final response = await _datasource.updateSingleUser(user: user, userId: userId);
+      final response = await _datasource.updateSingleUser(
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+          profileImageUrl: profileImageUrl,
+          userId: userId);
       return Right(response);
     } on NetworkException catch (e) {
       return Left(NetworkException.fromException(e));
@@ -72,6 +88,16 @@ class DashboardRepositoryImplementation implements DashboardRepository {
       {required String search, required int skip, required int take}) async {
     try {
       final response = await _datasource.searchUsers(search: search, skip: skip, take: take);
+      return Right(response);
+    } on NetworkException catch (e) {
+      return Left(NetworkException.fromException(e));
+    }
+  }
+
+  @override
+  ResultFuture<UploadImageModel> uploadImage({required List<int> image}) async {
+    try {
+      final response = await _datasource.uploadImage(image: image);
       return Right(response);
     } on NetworkException catch (e) {
       return Left(NetworkException.fromException(e));

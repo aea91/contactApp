@@ -1,3 +1,4 @@
+import 'package:core/navigation/go_manager.dart';
 import 'package:flutter/material.dart';
 
 class BaseBottomSheet extends StatelessWidget {
@@ -5,16 +6,26 @@ class BaseBottomSheet extends StatelessWidget {
     super.key,
     required this.child,
     this.isScrollControlled = true,
+    this.duration,
   });
 
   final Widget child;
   final bool isScrollControlled;
+  final Duration? duration;
 
   static Future<T?> show<T>({
     required BuildContext context,
     required Widget child,
     bool isScrollControlled = true,
+    Duration? duration,
   }) {
+    if (duration != null) {
+      Future.delayed(duration, () {
+        // Check if context is still mounted before popping
+        GoManager.instance.pop();
+      });
+    }
+
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: isScrollControlled,
@@ -30,6 +41,12 @@ class BaseBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (duration != null) {
+      Future.delayed(duration!, () {
+        // Check if context is still mounted before popping
+        GoManager.instance.pop();
+      });
+    }
     return child;
   }
 }

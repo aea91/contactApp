@@ -4,7 +4,10 @@ import 'package:contacts/dashboard/application/dashboard_cubit.dart';
 import 'package:contacts/dashboard/application/dashboard_state.dart';
 import 'package:contacts/dashboard/presentation/widget/bottom_sheet_header_widget.dart';
 import 'package:contacts/dashboard/presentation/widget/bottom_sheet_image_select.dart';
+import 'package:contacts/dashboard/presentation/widget/error_message.dart';
+import 'package:contacts/dashboard/presentation/widget/success_message.dart';
 import 'package:contacts/utils/injection_contatiner.dart';
+import 'package:core/exception/exception_type.dart';
 import 'package:core/extensions/context_extensions.dart';
 import 'package:core/navigation/go_manager.dart';
 import 'package:flutter/material.dart';
@@ -34,87 +37,105 @@ class _BottomSheetContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DashboardCubit, DashboardState>(
+    return BlocConsumer<DashboardCubit, DashboardState>(
+      listener: (context, state) {
+        if (state.exception != null) {
+          if (state.exception!.type == ExceptionType.info) {
+            BaseBottomSheet.show(
+                context: context,
+                duration: const Duration(seconds: 3),
+                child: SuccessMessage(message: state.exception!.message!));
+          } else {
+            BaseBottomSheet.show(
+                context: context,
+                duration: const Duration(seconds: 3),
+                child: ErrorMessage(message: state.exception!.message!));
+          }
+        }
+      },
       builder: (context, state) {
         return BaseBottomSheetContainer(
-            child: Padding(
-              padding: context.paddingPage,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  BottomSheetHeaderWidget(
-                      onCancel: () {
-                        GoManager.instance.pop();
-                      },
-                      isDoneEnabled: context.read<DashboardCubit>().isAllFieldsFilled(),
-                      onDone: () {},
-                      title: "New Contact"),
-                  SizedBox(height: 40),
-                  Center(
-                    child: CircleAvatar(
-                      backgroundColor: context.theme.dividerColor,
-                      backgroundImage: state.image != null ? FileImage(File(state.image!)) : null,
-                      radius: 98,
-                      child: Icon(
-                        Icons.person,
-                        size: 160,
-                        color: context.theme.colorScheme.onSurface,
-                      ),
+          theme: context.theme,
+          child: Padding(
+            padding: context.paddingPage,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BottomSheetHeaderWidget(
+                    onCancel: () {
+                      GoManager.instance.pop();
+                    },
+                    isDoneEnabled: context.read<DashboardCubit>().isAllFieldsFilled(),
+                    onDone: () async {
+                      await context.read<DashboardCubit>().handleCreateUser();
+                      GoManager.instance.pop<bool>(true);
+                    },
+                    title: "New Contact"),
+                const SizedBox(height: 40),
+                Center(
+                  child: CircleAvatar(
+                    backgroundColor: context.theme.dividerColor,
+                    backgroundImage: state.image != null ? FileImage(File(state.image!)) : null,
+                    radius: 98,
+                    child: Icon(
+                      Icons.person,
+                      size: 160,
+                      color: context.theme.colorScheme.onSurface,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        BaseBottomSheet.show(
-                          context: context,
-                          child: BottomSheetImageSelect(
-                            onImageSelect: (imageSource) {
-                              if (imageSource != null) {
-                                context
-                                    .read<DashboardCubit>()
-                                    .handleImageSelect(imageSource: imageSource);
-                              }
-                            },
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "Add Photo",
-                        style: context.textTheme.titleSmall,
-                      ),
+                ),
+                const SizedBox(height: 20),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      BaseBottomSheet.show(
+                        context: context,
+                        child: BottomSheetImageSelect(
+                          onImageSelect: (imageSource) {
+                            if (imageSource != null) {
+                              context
+                                  .read<DashboardCubit>()
+                                  .handleImageSelect(imageSource: imageSource);
+                            }
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Add Photo",
+                      style: context.textTheme.titleSmall,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  TextField(
-                    onChanged: (value) =>
-                        context.read<DashboardCubit>().setFirstName(firstName: value),
-                    decoration: InputDecoration(
-                      labelText: state.user?.firstName,
-                      hintText: "First Name",
-                    ),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  onChanged: (value) =>
+                      context.read<DashboardCubit>().setFirstName(firstName: value),
+                  decoration: InputDecoration(
+                    labelText: state.user?.firstName,
+                    hintText: "First Name",
                   ),
-                  SizedBox(height: 20),
-                  TextField(
-                    onChanged: (value) =>
-                        context.read<DashboardCubit>().setLastName(lastName: value),
-                    decoration: InputDecoration(
-                      hintText: "Last Name",
-                    ),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  onChanged: (value) => context.read<DashboardCubit>().setLastName(lastName: value),
+                  decoration: InputDecoration(
+                    hintText: "Last Name",
                   ),
-                  SizedBox(height: 20),
-                  TextField(
-                    onChanged: (value) =>
-                        context.read<DashboardCubit>().setPhoneNumber(phoneNumber: value),
-                    decoration: InputDecoration(
-                      hintText: "Phone Number",
-                    ),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  onChanged: (value) =>
+                      context.read<DashboardCubit>().setPhoneNumber(phoneNumber: value),
+                  decoration: InputDecoration(
+                    hintText: "Phone Number",
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            theme: context.theme);
+          ),
+        );
       },
     );
   }

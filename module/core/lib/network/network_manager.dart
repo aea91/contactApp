@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:core/base/model/network_error.dart';
 import 'package:core/base/model/base_response_model.dart';
 import 'package:core/cache/shared/shared_manager.dart';
+import 'package:core/exception/exception_type.dart';
 import 'package:core/logger/contact_logger.dart';
 import 'package:core/network/interface_network_manager.dart';
 import 'package:dio/dio.dart';
@@ -153,7 +154,7 @@ class NetworkManager implements InterfaceNetworkManager {
     throw NetworkException(
       message: baseResponse.messages?.firstOrNull,
       statusCode: response.statusCode ?? -1,
-      type: "failure",
+      type: ExceptionType.error,
     );
   }
 
@@ -242,7 +243,7 @@ class NetworkManager implements InterfaceNetworkManager {
       return NetworkException(
         message: baseResponse.messages?.first,
         statusCode: response.statusCode!,
-        type: "",
+        type: ExceptionType.error,
       );
     }
   }
@@ -301,7 +302,7 @@ class NetworkManager implements InterfaceNetworkManager {
     } else {
       return NetworkException(
         message: baseResponse.messages?.first,
-        type: "",
+        type: ExceptionType.error,
         statusCode: response.statusCode!,
       );
     }
@@ -312,7 +313,6 @@ class NetworkManager implements InterfaceNetworkManager {
     required String path,
     required FormData formData,
     required String token,
-    required int deviceId,
     required Function(Map<String, dynamic> json)? fromJson,
   }) async {
     _dio.options.headers['Authorization'] = "Bearer $token";
@@ -325,9 +325,19 @@ class NetworkManager implements InterfaceNetworkManager {
 
     final responseBody = response.data;
 
-    ContactLogger.instance!.info(TAG, "response: $responseBody");
+    BaseResponseModel baseResponse = BaseResponseModel.fromJson(responseBody);
 
-    return null;
+    if (baseResponse.status == HttpStatus.ok) {
+      if (fromJson == null) return null;
+      final data = baseResponse.data;
+      return fromJson(data as Map<String, dynamic>);
+    } else {
+      return NetworkException(
+        message: baseResponse.messages?.first,
+        type: ExceptionType.error,
+        statusCode: response.statusCode!,
+      );
+    }
   }
 
   @override
@@ -366,7 +376,7 @@ class NetworkManager implements InterfaceNetworkManager {
     } else {
       return NetworkException(
         message: baseResponse.messages?.first,
-        type: "type",
+        type: ExceptionType.error,
         statusCode: response.statusCode!,
       );
     }

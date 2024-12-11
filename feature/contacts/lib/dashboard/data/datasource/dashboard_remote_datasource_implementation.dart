@@ -1,8 +1,8 @@
 import 'package:contacts/dashboard/data/datasource/dashboard_remote_datasource.dart';
+import 'package:contacts/dashboard/data/model/upload_image_model.dart';
 import 'package:contacts/dashboard/data/model/user_dto_model.dart';
 import 'package:contacts/dashboard/data/model/user_list_response_success_dto.dart';
 import 'package:contacts/dashboard/data/model/user_model.dart';
-import 'package:contacts/dashboard/domain/entity/user_entity.dart';
 import 'package:contacts/dashboard/domain/usecase/delete_single_user_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/fetch_users_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/search_users_usecase.dart';
@@ -11,6 +11,7 @@ import 'package:contacts/utils/network_constants.dart';
 import 'package:core/base/model/network_error.dart';
 import 'package:core/global/global_helper.dart';
 import 'package:core/network/interface_network_manager.dart';
+import 'package:dio/dio.dart';
 
 class DashboardRemoteDatasourceImplementation extends DashboardRemoteDatasource {
   DashboardRemoteDatasourceImplementation(this._manager);
@@ -34,10 +35,19 @@ class DashboardRemoteDatasourceImplementation extends DashboardRemoteDatasource 
   }
 
   @override
-  Future<UserDtoModel> createUser({required UserModel user}) async {
+  Future<UserDtoModel> createUser({
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String? profileImageUrl,
+  }) async {
     final response = await _manager.dioPost(
       path: NetworkConstants.user,
-      model: user,
+      model: UserModel(
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+          profileImageUrl: profileImageUrl),
       fromJson: UserDtoModel.fromJson,
       token: "49fbc414-78fb-4fd4-953d-be210be2a829",
     );
@@ -66,13 +76,22 @@ class DashboardRemoteDatasourceImplementation extends DashboardRemoteDatasource 
 
   @override
   Future<UserDtoModel> updateSingleUser({
-    required UserEntity user,
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String profileImageUrl,
     required String userId,
   }) async {
     final response = await _manager.dioPut(
       path: NetworkConstants.user,
-      queryParam: UpdateSingleUserUsecaseParams(user: user, userId: userId).toJson(),
-      model: user,
+      queryParam: UpdateSingleUserUsecaseParams(
+              firstName: firstName,
+              lastName: lastName,
+              phoneNumber: phoneNumber,
+              profileImageUrl: profileImageUrl,
+              userId: userId)
+          .toJson(),
+      model: null,
       fromJson: UserDtoModel.fromJson,
       token: "49fbc414-78fb-4fd4-953d-be210be2a829",
     );
@@ -113,5 +132,25 @@ class DashboardRemoteDatasourceImplementation extends DashboardRemoteDatasource 
     }
 
     return response as UserListResponseSuccessDto;
+  }
+
+  @override
+  Future<UploadImageModel> uploadImage({required List<int> image}) async {
+    MultipartFile img = MultipartFile.fromBytes(image, filename: "${DateTime.now()}");
+
+    final data = FormData.fromMap({"image": img});
+
+    final response = await _manager.postForm(
+      path: NetworkConstants.uploadImage,
+      formData: data,
+      token: GlobalHelper.getToken()!,
+      fromJson: UploadImageModel.fromJson,
+    );
+
+    if (response is NetworkException) {
+      throw response;
+    }
+
+    return response;
   }
 }

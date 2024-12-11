@@ -9,6 +9,7 @@ import 'package:contacts/dashboard/domain/usecase/fetch_single_user_usecase.dart
 import 'package:contacts/dashboard/domain/usecase/fetch_users_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/search_users_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/update_single_user.dart';
+import 'package:contacts/dashboard/domain/usecase/upload_user_image.dart';
 import 'package:core/network/network_manager.dart';
 import 'package:get_it/get_it.dart';
 
@@ -23,6 +24,7 @@ Future<void> getItContactsInit() async {
           updateSingleUserUsecase: sl(),
           deleteSingleUserUsecase: sl(),
           searchUserUsecase: sl(),
+          uploadUserImageUseCase: sl(),
         ))
     ..registerLazySingleton(() => FetchUsersUsecase(sl()))
     ..registerLazySingleton(() => CreateUserUsecase(sl()))
@@ -30,6 +32,7 @@ Future<void> getItContactsInit() async {
     ..registerLazySingleton(() => UpdateSingleUserUsecase(sl()))
     ..registerLazySingleton(() => DeleteSingleUserUsecase(sl()))
     ..registerLazySingleton(() => SearchUsersUsecase(sl()))
+    ..registerLazySingleton(() => UploadUserImageUseCase(sl()))
     ..registerLazySingleton<DashboardRepository>(() => DashboardRepositoryImplementation(sl()))
     ..registerLazySingleton<DashboardRemoteDatasource>(
         () => DashboardRemoteDatasourceImplementation(NetworkManager.instance!));

@@ -56,10 +56,11 @@ class GoManager implements IGoService {
   }
 
   @override
-  pop() {
+  dynamic pop<T extends Object?>([T? result]) {
     if (_router.canPop()) {
-      _router.pop();
+      return _router.pop<T>(result);
     }
+    return null;
   }
 
   @override

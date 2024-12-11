@@ -33,7 +33,7 @@ class BottomSheetHeaderWidget extends StatelessWidget {
           style: context.textTheme.titleSmall!,
         ),
         TextButton(
-          onPressed: isDoneEnabled ? onDone : null,
+          onPressed: onDone,
           child: Text(
             actionText ?? "Done",
             style: context.textTheme.titleSmall!.copyWith(color: context.colors.onPrimary),
