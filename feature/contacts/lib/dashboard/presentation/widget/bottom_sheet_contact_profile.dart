@@ -4,7 +4,10 @@ import 'package:contacts/dashboard/domain/entity/user_dto_entity.dart';
 import 'package:contacts/dashboard/presentation/widget/bottom_sheet_delete_account.dart';
 import 'package:contacts/dashboard/presentation/widget/bottom_sheet_edit_contact.dart';
 import 'package:contacts/dashboard/presentation/widget/bottom_sheet_header_widget.dart';
+import 'package:contacts/dashboard/presentation/widget/error_message.dart';
+import 'package:contacts/dashboard/presentation/widget/success_message.dart';
 import 'package:contacts/utils/injection_contatiner.dart';
+import 'package:core/exception/exception_type.dart';
 import 'package:core/extensions/context_extensions.dart';
 import 'package:core/navigation/go_manager.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +24,30 @@ class BottomSheetContactProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<DashboardCubit>(),
-      child: FractionallySizedBox(
-        heightFactor: 0.9,
-        child: _BottomSheetContent(selectedUser: user),
+      child: BlocConsumer<DashboardCubit, DashboardState>(
+        listener: (context, state) {
+          if (state.exception != null) {
+            if (state.exception?.type == ExceptionType.info) {
+              BaseBottomSheet.show(
+                context: context,
+                duration: Duration(seconds: 3),
+                child: SuccessMessage(message: state.exception?.message ?? ""),
+              );
+              GoManager.instance.pop();
+            } else {
+              BaseBottomSheet.show(
+                context: context,
+                duration: Duration(seconds: 3),
+                child: ErrorMessage(message: state.exception?.message ?? ""),
+              );
+              GoManager.instance.pop();
+            }
+          }
+        },
+        builder: (context, state) => FractionallySizedBox(
+          heightFactor: 0.9,
+          child: _BottomSheetContent(selectedUser: user),
+        ),
       ),
     );
   }
@@ -60,7 +84,8 @@ class _BottomSheetContent extends StatelessWidget {
         isDoneEnabled: true,
         onCancel: GoManager.instance.pop,
         onDone: () {
-          context.read<DashboardCubit>().handleCreateUser();
+          BaseBottomSheet.show(
+              context: context, child: BottomSheetEditContact(selectedUser: selectedUser));
         },
         title: "Contact Profile",
         actionText: "Edit",
@@ -71,7 +96,9 @@ class _BottomSheetContent extends StatelessWidget {
           Center(
             child: CircleAvatar(
               radius: 98,
-              backgroundImage: NetworkImage(selectedUser.profileImageUrl ?? ''),
+              backgroundImage: selectedUser.profileImageUrl != null
+                  ? NetworkImage(selectedUser.profileImageUrl!)
+                  : null,
             ),
           ),
           TextButton(
@@ -104,7 +131,9 @@ class _BottomSheetContent extends StatelessWidget {
 
   Widget _buildDeleteButton(BuildContext context) => BlocBuilder<DashboardCubit, DashboardState>(
         builder: (context, state) => TextButton(
-          onPressed: () => _showDeleteConfirmation(context),
+          onPressed: () {
+            _showDeleteConfirmation(context);
+          },
           child: Text(
             "Delete Contact",
             style: context.textTheme.titleSmall!.copyWith(color: context.colors.error),
@@ -112,11 +141,14 @@ class _BottomSheetContent extends StatelessWidget {
         ),
       );
 
-  void _showDeleteConfirmation(BuildContext context) {
+  void _showDeleteConfirmation(BuildContext context) async {
     BaseBottomSheet.show(
       context: context,
       child: BottomSheetDeleteAccount(
-        onYes: () => context.read<DashboardCubit>().deleteSingleUser(userId: selectedUser.id!),
+        onYes: () {
+          context.read<DashboardCubit>().deleteSingleUser(id: selectedUser.id!);
+          GoManager.instance.pop<bool>(true);
+        },
         onNo: GoManager.instance.pop,
       ),
     );

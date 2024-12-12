@@ -16,9 +16,9 @@ abstract class DashboardRemoteDatasource {
     required String firstName,
     required String lastName,
     required String phoneNumber,
-    required String profileImageUrl,
+    required String? profileImageUrl,
   });
-  Future<void> deleteSingleUser({required String userId});
+  Future<void> deleteSingleUser({required String id});
   Future<UserListResponseSuccessDto> searchUsers(
       {required String search, required int skip, required int take});
   Future<UploadImageModel> uploadImage({required List<int> image});

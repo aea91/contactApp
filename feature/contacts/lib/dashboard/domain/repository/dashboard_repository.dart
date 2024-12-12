@@ -18,9 +18,9 @@ abstract class DashboardRepository {
     required String firstName,
     required String lastName,
     required String phoneNumber,
-    required String profileImageUrl,
+    required String? profileImageUrl,
     required String userId,
   });
-  ResultFuture<void> deleteSingleUser({required String userId});
+  ResultFuture<void> deleteSingleUser({required String id});
   ResultFuture<UploadImageModel> uploadImage({required List<int> image});
 }

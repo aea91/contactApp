@@ -257,7 +257,8 @@ class NetworkManager implements InterfaceNetworkManager {
     Map<String, dynamic>? queryParam,
     required Function(Map<String, dynamic> json)? fromJson,
   }) async {
-    _dio.options.headers['Authorization'] = "Bearer $token";
+    _dio.options.headers['ApiKey'] = token;
+
     _dio.options.responseType = ResponseType.json;
 
     if (queryParam != null) {
@@ -345,10 +346,10 @@ class NetworkManager implements InterfaceNetworkManager {
     required String path,
     required Function(Map<String, dynamic> json)? fromJson,
     required String token,
-    int? deviceId,
     Map<String, dynamic>? queryParam,
   }) async {
-    _dio.options.headers['Authorization'] = "Bearer $token";
+    _dio.options.headers['ApiKey'] = token;
+
     _dio.options.responseType = ResponseType.json;
 
     if (queryParam != null) {

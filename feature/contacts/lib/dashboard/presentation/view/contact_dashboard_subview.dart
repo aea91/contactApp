@@ -69,7 +69,7 @@ class _HeaderPage extends StatelessWidget {
           );
           if (result == true && context.mounted) {
             context.read<DashboardCubit>().pagingController.refresh();
-            context.read<DashboardCubit>().init();
+            //context.read<DashboardCubit>().init();
           }
         },
         theme: context.theme,

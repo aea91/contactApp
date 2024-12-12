@@ -3,10 +3,8 @@ import 'package:contacts/dashboard/data/model/upload_image_model.dart';
 import 'package:contacts/dashboard/data/model/user_dto_model.dart';
 import 'package:contacts/dashboard/data/model/user_list_response_success_dto.dart';
 import 'package:contacts/dashboard/data/model/user_model.dart';
-import 'package:contacts/dashboard/domain/usecase/delete_single_user_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/fetch_users_usecase.dart';
 import 'package:contacts/dashboard/domain/usecase/search_users_usecase.dart';
-import 'package:contacts/dashboard/domain/usecase/update_single_user.dart';
 import 'package:contacts/utils/network_constants.dart';
 import 'package:core/base/model/network_error.dart';
 import 'package:core/global/global_helper.dart';
@@ -79,21 +77,18 @@ class DashboardRemoteDatasourceImplementation extends DashboardRemoteDatasource 
     required String firstName,
     required String lastName,
     required String phoneNumber,
-    required String profileImageUrl,
+    required String? profileImageUrl,
     required String userId,
   }) async {
     final response = await _manager.dioPut(
-      path: NetworkConstants.user,
-      queryParam: UpdateSingleUserUsecaseParams(
-              firstName: firstName,
-              lastName: lastName,
-              phoneNumber: phoneNumber,
-              profileImageUrl: profileImageUrl,
-              userId: userId)
-          .toJson(),
-      model: null,
+      path: NetworkConstants.updateUser(id: userId),
+      model: UserModel(
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+          profileImageUrl: profileImageUrl),
       fromJson: UserDtoModel.fromJson,
-      token: "49fbc414-78fb-4fd4-953d-be210be2a829",
+      token: GlobalHelper.getToken()!,
     );
 
     if (response is NetworkException) {
@@ -104,17 +99,18 @@ class DashboardRemoteDatasourceImplementation extends DashboardRemoteDatasource 
   }
 
   @override
-  Future<void> deleteSingleUser({required String userId}) async {
+  Future<void> deleteSingleUser({required String id}) async {
     final response = await _manager.dioDelete(
       fromJson: null,
-      path: NetworkConstants.user,
-      queryParam: DeleteSingleUserUsecaseParams(userId: userId).toJson(),
-      token: "49fbc414-78fb-4fd4-953d-be210be2a829",
+      path: NetworkConstants.deleteUser(id: id),
+      token: GlobalHelper.getToken()!,
     );
 
     if (response is NetworkException) {
       throw response;
     }
+
+    return response;
   }
 
   @override

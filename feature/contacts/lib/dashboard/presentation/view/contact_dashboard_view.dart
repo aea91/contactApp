@@ -1,11 +1,9 @@
 import 'package:contacts/dashboard/application/dashboard_cubit.dart';
 import 'package:contacts/dashboard/application/dashboard_state.dart';
-import 'package:contacts/dashboard/application/dashboard_status.dart';
 import 'package:contacts/dashboard/domain/entity/user_dto_entity.dart';
 import 'package:contacts/dashboard/presentation/widget/bottom_sheet_new_contact.dart';
 import 'package:contacts/dashboard/presentation/widget/contact_card_widget.dart';
 import 'package:contacts/dashboard/presentation/widget/contact_dashboard_empty_widget.dart';
-import 'package:contacts/dashboard/presentation/widget/error_message.dart';
 import 'package:contacts/utils/injection_contatiner.dart';
 import 'package:core/base/view/base_view.dart';
 import 'package:core/extensions/context_extensions.dart';

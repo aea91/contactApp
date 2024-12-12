@@ -57,7 +57,7 @@ class DashboardRepositoryImplementation implements DashboardRepository {
     required String firstName,
     required String lastName,
     required String phoneNumber,
-    required String profileImageUrl,
+    required String? profileImageUrl,
     required String userId,
   }) async {
     try {
@@ -74,9 +74,9 @@ class DashboardRepositoryImplementation implements DashboardRepository {
   }
 
   @override
-  ResultFuture<void> deleteSingleUser({required String userId}) async {
+  ResultFuture<void> deleteSingleUser({required String id}) async {
     try {
-      await _datasource.deleteSingleUser(userId: userId);
+      await _datasource.deleteSingleUser(id: id);
       return const Right(null);
     } on NetworkException catch (e) {
       return Left(NetworkException.fromException(e));

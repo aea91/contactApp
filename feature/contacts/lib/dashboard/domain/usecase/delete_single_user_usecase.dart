@@ -12,14 +12,14 @@ class DeleteSingleUserUsecase extends UseCaseWithParams<void, DeleteSingleUserUs
 
   @override
   ResultFuture<void> call(DeleteSingleUserUsecaseParams params) async =>
-      _repository.deleteSingleUser(userId: params.userId);
+      _repository.deleteSingleUser(id: params.id);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable(createFactory: false)
 class DeleteSingleUserUsecaseParams {
-  final String userId;
+  final String id;
 
-  DeleteSingleUserUsecaseParams({required this.userId});
+  DeleteSingleUserUsecaseParams({required this.id});
 
-  Map<String, dynamic> toJson() => {'userId': userId};
+  Map<String, dynamic> toJson() => _$DeleteSingleUserUsecaseParamsToJson(this);
 }

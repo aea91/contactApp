@@ -136,7 +136,7 @@ class DashboardCubit extends Cubit<DashboardState> {
         firstName: user.firstName!,
         lastName: user.lastName!,
         phoneNumber: user.phoneNumber!,
-        profileImageUrl: user.profileImageUrl!,
+        profileImageUrl: user.profileImageUrl,
         userId: userId));
     result.fold((failure) {
       emit(state.copyWith(status: DashboardStatus.error, exception: failure));
@@ -145,13 +145,17 @@ class DashboardCubit extends Cubit<DashboardState> {
     });
   }
 
-  Future<void> deleteSingleUser({required String userId}) async {
+  Future<void> deleteSingleUser({required String id}) async {
     emit(state.copyWith(status: DashboardStatus.loading));
-    final result = await _deleteSingleUserUsecase(DeleteSingleUserUsecaseParams(userId: userId));
+    final result = await _deleteSingleUserUsecase(DeleteSingleUserUsecaseParams(id: id));
     result.fold((failure) {
       emit(state.copyWith(status: DashboardStatus.error, exception: failure));
     }, (user) {
-      emit(state.copyWith(status: DashboardStatus.loaded));
+      emit(state.copyWith(
+        status: DashboardStatus.loaded,
+        exception: const AppException(
+            message: "Account deleted!", type: ExceptionType.info, showMessage: true),
+      ));
     });
   }
 
@@ -171,9 +175,14 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   Future<void> handleUpdateUser() async {
     UserDtoEntity? selectedUser = state.selectedUser;
-    print("selectedUser: ${selectedUser?.firstName}");
-    print("selectedUser: ${selectedUser?.lastName}");
-    print("selectedUser: ${selectedUser?.phoneNumber}");
+    if (selectedUser == null) {
+      emit(state.copyWith(
+          status: DashboardStatus.error,
+          exception: const AppException(
+              message: "Please select a user", type: ExceptionType.info, showMessage: true)));
+      return;
+    }
+    await updateSingleUser(user: selectedUser, userId: selectedUser.id!);
   }
 
   Future<void> handleCreateUser() async {
@@ -235,6 +244,10 @@ class DashboardCubit extends Cubit<DashboardState> {
         firstName: null, lastName: null, phoneNumber: phoneNumber, profileImageUrl: null);
     user = user.copyWith(phoneNumber: phoneNumber);
     emit(state.copyWith(user: user));
+  }
+
+  void setSelectedUser({required UserDtoEntity user}) {
+    emit(state.copyWith(selectedUser: user));
   }
 
   void editFirstName({required String firstName}) {

@@ -28,7 +28,7 @@ class UpdateSingleUserUsecaseParams {
   final String firstName;
   final String lastName;
   final String phoneNumber;
-  final String profileImageUrl;
+  final String? profileImageUrl;
   final String userId;
 
   UpdateSingleUserUsecaseParams({

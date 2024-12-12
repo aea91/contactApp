@@ -25,7 +25,6 @@ abstract class InterfaceNetworkManager {
     required String path,
     required dynamic model,
     String? token,
-    int? deviceId,
     required Function(Map<String, dynamic> json)? fromJson,
     bool isSendResponseDirect = false,
     Map<String, dynamic>? queryParam,
@@ -43,7 +42,6 @@ abstract class InterfaceNetworkManager {
     required String path,
     required Function(Map<String, dynamic> json)? fromJson,
     required String token,
-    int? deviceId,
     Map<String, dynamic>? queryParam,
   });
 

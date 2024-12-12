@@ -6,8 +6,8 @@ part of 'delete_single_user_usecase.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DeleteSingleUserUsecaseParams _$DeleteSingleUserUsecaseParamsFromJson(
-        Map<String, dynamic> json) =>
-    DeleteSingleUserUsecaseParams(
-      userId: json['userId'] as String,
-    );
+Map<String, dynamic> _$DeleteSingleUserUsecaseParamsToJson(
+        DeleteSingleUserUsecaseParams instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };

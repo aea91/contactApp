@@ -120,7 +120,9 @@ class _BottomSheetContent extends StatelessWidget {
               radius: 98,
               backgroundImage: state.image != null
                   ? FileImage(File(state.image!))
-                  : NetworkImage(selectedUser.profileImageUrl ?? ''),
+                  : selectedUser.profileImageUrl != null
+                      ? NetworkImage(selectedUser.profileImageUrl!)
+                      : null,
             ),
           ),
           TextButton(
