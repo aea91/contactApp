@@ -20,16 +20,13 @@ class CachedNetworkManager {
     required double height,
     BoxFit? fit,
   }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(24.0),
-      child: CachedNetworkImage(
-        width: width,
-        height: height,
-        fit: fit ?? BoxFit.contain,
+    return CircleAvatar(
+      backgroundImage: CachedNetworkImageProvider(
+        imageUrl,
         cacheKey: imageUrl,
-        imageUrl: imageUrl,
-        placeholder: (context, url) => const Center(child: CircularProgressIndicator.adaptive()),
-        errorWidget: (context, url, error) => Image.asset(errorImagePath),
+        errorListener: (failure) {
+          Image.asset(errorImagePath);
+        },
       ),
     );
   }

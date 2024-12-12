@@ -84,15 +84,16 @@ class DashboardCubit extends Cubit<DashboardState> {
     result.fold((failure) {
       emit(state.copyWith(status: DashboardStatus.error, exception: failure));
     }, (users) {
-      emit(state.copyWith(userList: users.users, status: DashboardStatus.loaded));
-      _globalCubit!.setContactList(users.users);
-      isLastPage = users.users.length < _pageSize;
+      final List<UserDtoEntity> userList = users.users;
+      _globalCubit!.setContactList(userList);
+      emit(state.copyWith(userList: userList, status: DashboardStatus.loaded));
+      isLastPage = userList.length < _pageSize;
     });
     if (isLastPage ?? false) {
-      pagingController.appendLastPage(_globalCubit!.state.contactList as List<UserDtoEntity>);
+      pagingController.appendLastPage(state.userList as List<UserDtoEntity>);
     } else {
       final nextPage = pageKey + 1;
-      pagingController.appendPage(_globalCubit!.state.contactList as List<UserDtoEntity>, nextPage);
+      pagingController.appendPage(state.userList as List<UserDtoEntity>, nextPage);
     }
   }
 
@@ -111,16 +112,16 @@ class DashboardCubit extends Cubit<DashboardState> {
       result.fold((failure) {
         emit(state.copyWith(status: DashboardStatus.error, exception: failure));
       }, (users) {
-        emit(state.copyWith(userList: users.users, status: DashboardStatus.loaded));
-        _globalCubit!.setContactList(users.users);
-        isLastPage = users.users.length < _pageSize;
+        final List<UserDtoEntity> userList = users.users;
+        emit(state.copyWith(userList: userList, status: DashboardStatus.loaded));
+        _globalCubit!.setContactList(userList);
+        isLastPage = userList.length < _pageSize;
       });
       if (isLastPage ?? false) {
-        pagingController.appendLastPage(_globalCubit!.state.contactList as List<UserDtoEntity>);
+        pagingController.appendLastPage(state.userList as List<UserDtoEntity>);
       } else {
         final nextPage = pageKey + 1;
-        pagingController.appendPage(
-            _globalCubit!.state.contactList as List<UserDtoEntity>, nextPage);
+        pagingController.appendPage(state.userList as List<UserDtoEntity>, nextPage);
       }
     });
   }
@@ -186,6 +187,7 @@ class DashboardCubit extends Cubit<DashboardState> {
 
       GoManager.instance.pop(true);
       GoManager.instance.pop(true);
+      _globalCubit!.setIsRefresh(true);
     });
   }
 
@@ -210,7 +212,7 @@ class DashboardCubit extends Cubit<DashboardState> {
 
       GoManager.instance.pop();
       GoManager.instance.pop();
-      GoManager.instance.replace(path: NavigationConstants.contact_dashboard);
+      _globalCubit!.setIsRefresh(true);
     });
   }
 

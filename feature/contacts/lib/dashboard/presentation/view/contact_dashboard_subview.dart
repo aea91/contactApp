@@ -7,21 +7,26 @@ class _ContactResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GlobalCubit, GlobalState>(
+    return BlocConsumer<GlobalCubit, GlobalState>(
+      listener: (context, state) {
+        if (state.isRefresh) {
+          context.read<DashboardCubit>().pagingController.refresh();
+        }
+      },
       builder: (context, state) {
         return PagedSliverList(
           pagingController: context.read<DashboardCubit>().pagingController,
-          builderDelegate: PagedChildBuilderDelegate(
-            itemBuilder: (context, user, index) => Padding(
-              padding: context.paddingPage,
-              child: state.contactList.isNotEmpty
-                  ? ContactCardWidget(user: state.contactList[index])
-                  : const SizedBox(),
-            ),
+          builderDelegate: PagedChildBuilderDelegate<dynamic>(
+            itemBuilder: (context, item, index) {
+              return Padding(
+                padding: context.paddingPage,
+                child: ContactCardWidget(user: item),
+              );
+            },
             noItemsFoundIndicatorBuilder: (context) {
               return ContactDashboardEmptyWidget(
-                onPressed: () {
-                  BaseBottomSheet.show(
+                onPressed: () async {
+                  await BaseBottomSheet.show(
                     context: context,
                     child: const BottomSheetNewContact(),
                   );

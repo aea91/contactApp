@@ -13,6 +13,7 @@ import 'package:core/navigation/go_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:global/application/global_cubit.dart';
+import 'package:packages/cached_network/cached_network_manager.dart';
 import 'package:uikit/bottomSheets/base_bottom_sheet.dart';
 import 'package:uikit/container/base_bottom_sheet_container.dart';
 
@@ -24,8 +25,8 @@ class BottomSheetContactProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<DashboardCubit>()
-        ..initContactProfile(globalCubit: BlocProvider.of<GlobalCubit>(context)),
+      create: (context) =>
+          sl<DashboardCubit>()..initContactProfile(globalCubit: context.read<GlobalCubit>()),
       child: BlocConsumer<DashboardCubit, DashboardState>(
         listener: (context, state) {
           if (state.exception != null) {
@@ -96,20 +97,18 @@ class _BottomSheetContent extends StatelessWidget {
   Widget _buildProfileImage(BuildContext context) => Column(
         children: [
           Center(
-            child: CircleAvatar(
-              radius: 98,
-              backgroundImage: selectedUser.profileImageUrl != null
-                  ? NetworkImage(selectedUser.profileImageUrl!)
-                  : null,
+            child: SizedBox(
+              width: 196,
+              height: 196,
+              child: CachedNetworkManager.instance?.cachedNetworkImage(
+                imageUrl: selectedUser.profileImageUrl ?? "",
+                errorImagePath: "assets/images/error_image.jpeg",
+                width: 196,
+                height: 196,
+              ),
             ),
           ),
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "Change Photo",
-              style: context.textTheme.titleSmall,
-            ),
-          ),
+          const SizedBox(height: 16),
         ],
       );
 

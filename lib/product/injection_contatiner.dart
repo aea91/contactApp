@@ -18,8 +18,8 @@ Future<void> mainInit() async {
   ImagePickerManager.instance!.init();
   NetworkManager.instance!.init(
     baseUrl: AppEnv().baseUrl,
-    sendTimeOut: 10,
-    connectTimeOut: 10,
-    receiveTimeOut: 10,
+    sendTimeOut: 30,
+    connectTimeOut: 30,
+    receiveTimeOut: 30,
   );
 }

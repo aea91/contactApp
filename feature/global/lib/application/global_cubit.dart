@@ -23,4 +23,8 @@ class GlobalCubit extends Cubit<GlobalState> {
   void clearContactList() {
     emit(state.copyWith(contactList: []));
   }
+
+  void setIsRefresh(bool val) {
+    emit(state.copyWith(isRefresh: val));
+  }
 }
