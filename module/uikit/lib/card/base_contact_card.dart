@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packages/cached_network/cached_network_manager.dart';
 
 class BaseContactCard extends StatelessWidget {
   const BaseContactCard({
@@ -28,8 +29,11 @@ class BaseContactCard extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         visualDensity: VisualDensity.compact,
-        leading: CircleAvatar(
-          backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
+        leading: CachedNetworkManager.instance?.cachedNetworkImage(
+          imageUrl: imageUrl,
+          errorImagePath: "assets/images/error_image.jpeg",
+          width: 40,
+          height: 40,
         ),
         title: Text(
           "$firstName $lastName",

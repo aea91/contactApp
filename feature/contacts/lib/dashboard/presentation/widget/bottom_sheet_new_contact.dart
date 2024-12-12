@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:contacts/dashboard/application/dashboard_cubit.dart';
 import 'package:contacts/dashboard/application/dashboard_state.dart';
 import 'package:contacts/dashboard/presentation/widget/bottom_sheet_header_widget.dart';
@@ -81,11 +83,21 @@ class _BottomSheetContent extends StatelessWidget {
                           title: "New Contact"),
                       const SizedBox(height: 40),
                       Center(
-                        child: SvgPicture.asset(
-                          IconConstants.instance.person,
-                          width: 196,
-                          height: 196,
-                        ),
+                        child: state.image != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(98),
+                                child: Image.file(
+                                  File(state.image!),
+                                  width: 196,
+                                  height: 196,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : SvgPicture.asset(
+                                IconConstants.instance.person,
+                                width: 196,
+                                height: 196,
+                              ),
                       ),
                       const SizedBox(height: 20),
                       Center(

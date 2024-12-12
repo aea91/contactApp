@@ -21,7 +21,7 @@ class CachedNetworkManager {
     BoxFit? fit,
   }) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16.0),
+      borderRadius: BorderRadius.circular(24.0),
       child: CachedNetworkImage(
         width: width,
         height: height,
