@@ -29,4 +29,12 @@ class CreateUserUsecaseParams {
     required this.phoneNumber,
     required this.profileImageUrl,
   });
+
+  CreateUserUsecaseParams.empty()
+      : this(
+          firstName: "",
+          lastName: "",
+          phoneNumber: "",
+          profileImageUrl: null,
+        );
 }

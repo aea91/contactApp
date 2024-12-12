@@ -9,6 +9,8 @@ import 'package:core/base/view/base_view.dart';
 import 'package:core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:global/application/global_cubit.dart';
+import 'package:global/application/global_state.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:uikit/bottomSheets/base_bottom_sheet.dart';
 import 'package:uikit/button/base_action_button.dart';
@@ -22,7 +24,8 @@ class ContactDashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => sl<DashboardCubit>()..init(),
+        create: (context) =>
+            sl<DashboardCubit>()..initDashboard(globalCubit: BlocProvider.of<GlobalCubit>(context)),
         child: BlocConsumer<DashboardCubit, DashboardState>(
           listener: (context, state) {},
           builder: (context, state) {

@@ -1,7 +1,6 @@
-name: contacts
+name: global
 description: "A new Flutter package project."
 version: 0.0.1
-publish_to: none
 homepage:
 
 environment:
@@ -9,38 +8,19 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  core:
+  core: 
     path: ../../module/core
-  uikit:
-    path: ../../module/uikit
   packages:
     path: ../../module/packages
-  global:
-    path: ../../feature/global
-  get_it: ^8.0.2
-  go_router: ^14.6.2
-  json_serializable: ^6.9.0
-  json_annotation: ^4.9.0
   equatable: ^2.0.7
+  flutter:
+    sdk: flutter
   flutter_bloc: ^8.1.6
-  fpdart: ^1.1.1
-  sliver_tools: ^0.2.12
-  infinite_scroll_pagination: ^4.1.0
-  http_parser: ^4.0.2
-  dio: ^5.7.0
-  flutter_svg: ^2.0.16
-  shared_preferences: ^2.3.3
-  bloc_test: ^9.1.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  build_runner: ^2.4.13
-  mocktail: ^1.0.4
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

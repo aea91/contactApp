@@ -40,4 +40,7 @@ class UpdateSingleUserUsecaseParams {
   });
 
   Map<String, dynamic> toJson() => _$UpdateSingleUserUsecaseParamsToJson(this);
+
+  UpdateSingleUserUsecaseParams.empty()
+      : this(firstName: "", lastName: "", phoneNumber: "", profileImageUrl: null, userId: "");
 }

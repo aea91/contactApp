@@ -26,4 +26,6 @@ class FetchUsersUsecaseParams {
   final int take;
 
   Map<String, dynamic> toJson() => _$FetchUsersUsecaseParamsToJson(this);
+
+  FetchUsersUsecaseParams.empty() : this(skip: 0, take: 0);
 }

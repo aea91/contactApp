@@ -12,6 +12,7 @@ import 'package:core/extensions/context_extensions.dart';
 import 'package:core/navigation/go_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:global/application/global_cubit.dart';
 import 'package:uikit/bottomSheets/base_bottom_sheet.dart';
 import 'package:uikit/container/base_bottom_sheet_container.dart';
 
@@ -23,7 +24,8 @@ class BottomSheetContactProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<DashboardCubit>(),
+      create: (context) => sl<DashboardCubit>()
+        ..initContactProfile(globalCubit: BlocProvider.of<GlobalCubit>(context)),
       child: BlocConsumer<DashboardCubit, DashboardState>(
         listener: (context, state) {
           if (state.exception != null) {
@@ -145,9 +147,8 @@ class _BottomSheetContent extends StatelessWidget {
     BaseBottomSheet.show(
       context: context,
       child: BottomSheetDeleteAccount(
-        onYes: () {
-          context.read<DashboardCubit>().deleteSingleUser(id: selectedUser.id!);
-          GoManager.instance.pop<bool>(true);
+        onYes: () async {
+          await context.read<DashboardCubit>().deleteSingleUser(id: selectedUser.id!);
         },
         onNo: GoManager.instance.pop,
       ),

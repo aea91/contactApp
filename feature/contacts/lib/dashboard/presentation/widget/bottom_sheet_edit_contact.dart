@@ -11,6 +11,7 @@ import 'package:core/extensions/context_extensions.dart';
 import 'package:core/navigation/go_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:global/application/global_cubit.dart';
 import 'package:uikit/bottomSheets/base_bottom_sheet.dart';
 import 'package:uikit/container/base_bottom_sheet_container.dart';
 
@@ -47,7 +48,9 @@ class _BottomSheetEditContactState extends State<BottomSheetEditContact> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<DashboardCubit>()..initEditUser(selectedUser: widget.selectedUser),
+      create: (context) => sl<DashboardCubit>()
+        ..initEditUser(
+            selectedUser: widget.selectedUser, globalCubit: BlocProvider.of<GlobalCubit>(context)),
       child: FractionallySizedBox(
         heightFactor: 0.9,
         child: _BottomSheetContent(

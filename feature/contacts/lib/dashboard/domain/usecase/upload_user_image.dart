@@ -18,4 +18,6 @@ class UploadUserImageParams {
   final List<int> image;
 
   UploadUserImageParams({required this.image});
+
+  UploadUserImageParams.empty() : this(image: []);
 }

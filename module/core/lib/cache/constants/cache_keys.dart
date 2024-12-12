@@ -1,1 +1,1 @@
-enum CacheKeys { token }
+enum CacheKeys { token, keyword }

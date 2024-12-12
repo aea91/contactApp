@@ -54,4 +54,15 @@ class UserDtoEntity extends UserEntity {
         phoneNumber.hashCode ^
         profileImageUrl.hashCode;
   }
+
+  static UserDtoEntity empty() {
+    return UserDtoEntity(
+      id: '',
+      createdAt: '',
+      firstName: '',
+      lastName: '',
+      phoneNumber: '',
+      profileImageUrl: '',
+    );
+  }
 }

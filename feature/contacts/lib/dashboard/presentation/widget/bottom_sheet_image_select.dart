@@ -1,7 +1,9 @@
+import 'package:contacts/utils/icon_constant.dart';
 import 'package:contacts/utils/image_source.dart';
 import 'package:core/extensions/context_extensions.dart';
 import 'package:core/navigation/go_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:uikit/container/base_bottom_sheet_container.dart';
 
 class BottomSheetImageSelect extends StatelessWidget {
@@ -34,13 +36,13 @@ class BottomSheetContent extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () => onImageSelect(ImageSource.camera),
                 label: const Text("Camera"),
-                icon: const Icon(Icons.camera_alt_outlined),
+                icon: SvgPicture.asset(IconConstants.instance.camera, width: 24, height: 24),
               ),
               const SizedBox(height: 15),
               ElevatedButton.icon(
                 onPressed: () => onImageSelect(ImageSource.gallery),
                 label: const Text("Gallery"),
-                icon: const Icon(Icons.image_aspect_ratio_outlined),
+                icon: SvgPicture.asset(IconConstants.instance.gallery, width: 24, height: 24),
               ),
               const SizedBox(height: 15),
               ElevatedButton(

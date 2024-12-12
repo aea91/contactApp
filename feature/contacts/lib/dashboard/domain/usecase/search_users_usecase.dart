@@ -27,4 +27,6 @@ class SearchUsersUsecaseParams {
   final int take;
 
   Map<String, dynamic> toJson() => _$SearchUsersUsecaseParamsToJson(this);
+
+  SearchUsersUsecaseParams.empty() : this(search: "", skip: 0, take: 0);
 }

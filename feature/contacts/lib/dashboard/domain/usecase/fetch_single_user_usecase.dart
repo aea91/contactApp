@@ -26,4 +26,6 @@ class FetchSingleUserUsecaseParams {
 
   factory FetchSingleUserUsecaseParams.fromJson(Map<String, dynamic> json) =>
       _$FetchSingleUserUsecaseParamsFromJson(json);
+
+  FetchSingleUserUsecaseParams.empty() : this(userId: "");
 }

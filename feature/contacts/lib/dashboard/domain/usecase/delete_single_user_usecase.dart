@@ -22,4 +22,6 @@ class DeleteSingleUserUsecaseParams {
   DeleteSingleUserUsecaseParams({required this.id});
 
   Map<String, dynamic> toJson() => _$DeleteSingleUserUsecaseParamsToJson(this);
+
+  DeleteSingleUserUsecaseParams.empty() : this(id: "");
 }

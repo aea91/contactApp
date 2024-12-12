@@ -1,5 +1,7 @@
+import 'package:contacts/utils/icon_constant.dart';
 import 'package:core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ContactDashboardEmptyWidget extends StatelessWidget {
   const ContactDashboardEmptyWidget({super.key, required this.onPressed});
@@ -11,10 +13,10 @@ class ContactDashboardEmptyWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircleAvatar(
-          backgroundColor: Colors.grey,
-          radius: 30,
-          child: Icon(Icons.person, color: context.theme.scaffoldBackgroundColor),
+        SvgPicture.asset(
+          IconConstants.instance.person,
+          width: 60,
+          height: 60,
         ),
         SizedBox(height: 15),
         Text(
